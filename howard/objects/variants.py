@@ -2490,11 +2490,13 @@ class Variants:
                             annotation_file_found = None
 
                             # Expand user
-                            annotation_file = full_path(annotation_file)
+                            if annotation_file != "splice":
+                                annotation_file = full_path(annotation_file)
 
                             if os.path.exists(annotation_file):
                                 annotation_file_found = annotation_file
-
+                            elif annotation_file.lower() == "splice":
+                                annotation_file_found = "splice"
                             else:
                                 # Find within assembly folders
                                 for annotations_database in annotations_databases:
@@ -2510,12 +2512,13 @@ class Variants:
                                             annotation_file_found = found_files[0]
                                             break
                             log.debug(f"for {annotation_file} annotation_file_found={annotation_file_found}")
-
+                            
+                            if annotation_file_found != "splice":
+                                annotation_file_found = full_path(annotation_file_found)
+                            else:
+                                annotation_file_found = self.annotation_splice()
                             # Full path
-                            annotation_file_found = full_path(annotation_file_found)
-
                             if annotation_file_found:
-
                                 database = Database(database=annotation_file_found)
                                 quick_annotation_format = database.get_format()
                                 quick_annotation_is_compressed = database.is_compressed()
@@ -2648,7 +2651,6 @@ class Variants:
                 f"Existing annotations in VCF: {vcf_annotation} [{vcf_annotation_line}]")
 
         if annotations:
-
             tmp_ann_vcf_list = []
             commands = []
             tmp_files = []
@@ -4608,6 +4610,21 @@ class Variants:
         # Remove added columns
         for added_column in added_columns:
             self.drop_column(column=added_column)
+
+    def annotation_splice(self, threads: int = None) -> None:
+        """
+        Launch SPiP and SpliceAI in a docker container
+        """
+        splice_dict = self.config["annotation"].get("splice", None)
+        if splice:
+            mount = [f"-v {path}:{path}:{mode}" for path, mode in splice_dict.get("mount", None).items()]
+            #need folder to store tmp data and log
+            cmd = f"nextflow -log {os.path.join(splice_dict.get("output_folder", None), "splice.log")} -c {splice_dict.get("splice_config", None)} run {splice_dict.get("main", None)} -entr SPLICe --vcf {self.input} --output_folder {splice_dict.get("output_folder", None)} -profile standard,conda,singularity,report,timeline"
+        else:
+            return None
+
+        #run_parallel_commands(self.config)
+        return None
 
     ###
     # Prioritization

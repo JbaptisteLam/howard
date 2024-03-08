@@ -1,56 +1,72 @@
 {
-  "annotation": {
-    "snpeff": {
-      "options": "-lof -hgvs -oicr -noShiftHgvs -spliceSiteSize 3 "
-    },
-    "annovar": {
-      "annotations": {
-        "refGene": {
-          "INFO": null
-        }
-      },
-      "options": {
-        "genebase": "-hgvs -splicing_threshold 3 ",
-        "intronhgvs": 10
-      }
-    },
-    "parquet": {
-      "annotations": {
-        "tests/databases/annotations/current/hg19/avsnp150.parquet": {
-          "INFO": null
+    "annotation": {
+        "snpeff": {
+            "options": "-lof -hgvs -oicr -noShiftHgvs -spliceSiteSize 3 "
         },
-        "tests/databases/annotations/current/hg19/dbnsfp42a.parquet": {
-          "INFO": null
+        "annovar": {
+            "annotations": {
+                "refGene": {
+                    "INFO": null
+                }
+            },
+            "options": {
+                "genebase": "-hgvs -splicing_threshold 3 ",
+                "intronhgvs": 10
+            }
         },
-        "tests/databases/annotations/current/hg19/gnomad211_genome.parquet": {
-          "INFO": null
+        "parquet": {
+            "annotations": {
+                "tests/databases/annotations/current/hg19/avsnp150.parquet": {
+                    "INFO": null
+                },
+                "tests/databases/annotations/current/hg19/dbnsfp42a.parquet": {
+                    "INFO": null
+                },
+                "tests/databases/annotations/current/hg19/gnomad211_genome.parquet": {
+                    "INFO": null
+                }
+            }
+        },
+        "bcftools": {
+            "annotations": {
+                "tests/databases/annotations/current/hg19/cosmic70.vcf.gz": {
+                    "INFO": null
+                }
+            }
+        },
+        "splice": {
+            "mount": {
+                "/home1/data/STARK/databases": "ro",
+                "/home1/BAS/lamouchj/test/splice-docker-test": "rw"
+            },
+            "output_folder": "",
+            "splice_config": "",
+            "main": ""
         }
-      }
     },
-    "bcftools": {
-      "annotations": {
-        "tests/databases/annotations/current/hg19/cosmic70.vcf.gz": {
-          "INFO": null
-        }
-      }
-    }
-  },
-  "calculation": {
-    "vartype": null,
-    "snpeff_hgvs": null,
-    "NOMEN": {
-      "options": {
-        "hgvs_field": "snpeff_hgvs",
-        "transcripts": "tests/data/transcripts.tsv"
-      }
+    "calculation": {
+        "vartype": null,
+        "snpeff_hgvs": null,
+        "NOMEN": {
+            "options": {
+                "hgvs_field": "snpeff_hgvs",
+                "transcripts": "tests/data/transcripts.tsv"
+            }
+        },
+        "VAF": ""
     },
-    "VAF": ""
-  },
-  "prioritization": {
-    "config_profiles": "config/prioritization_profiles.json",
-    "pzfields": ["PZScore", "PZFlag", "PZComment"],
-    "profiles": ["default", "GERMLINE"]
-  },
-  "explode_infos": "INFO/",
-  "threads": 8
+    "prioritization": {
+        "config_profiles": "config/prioritization_profiles.json",
+        "pzfields": [
+            "PZScore",
+            "PZFlag",
+            "PZComment"
+        ],
+        "profiles": [
+            "default",
+            "GERMLINE"
+        ]
+    },
+    "explode_infos": "INFO/",
+    "threads": 8
 }
